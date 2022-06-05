@@ -7,13 +7,13 @@ package com.framework.cloud.generator.constant;
  */
 public class GeneratorConstant {
     /** 数据库 */
-    public static final String URL = "jdbc:mysql://localhost:3306/framework-user?characterEncoding=utf8&useSSL=false&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=GMT%2B8";
+    public static final String URL = "jdbc:mysql://139.155.11.84:3306/framework-user?characterEncoding=utf8&useSSL=false&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=GMT%2B8";
     /** 全局 */
-    public static final String OVERALL_PATH = "C:/Program Files/979/framework";
+    public static final String OVERALL_PATH = "F:/JAVA/framework";
     /** 主模块 */
     public static final String MODULE_PATH = "/framework-cloud-user";
     /** 服务层模块 */
-    public static final String PROJECT_PATH = "framework-cloud-user-api";
+    public static final String PROJECT_PATH = "/framework-cloud-user-api";
     /** 基础设施层模块 */
     public static final String INFRASTRUCTURE_PATH = "/framework-cloud-user-infrastructure";
     /** 默认JAVA文件路径 */

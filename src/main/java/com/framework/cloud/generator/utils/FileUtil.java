@@ -3,6 +3,10 @@ package com.framework.cloud.generator.utils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * 文件工具
@@ -11,15 +15,33 @@ import java.io.File;
  */
 public class FileUtil {
 
-
     /**
      * 判断文件是否存在
      *
-     * @param path 路径
+     * @param fileName 路径
+     * @param level 层级
      */
-    public static boolean isExists(String path) {
-        File file = new File(path);
-        return file.exists();
+    public static boolean checkDir(String fileName, Integer level) {
+        try {
+            Path path = Paths.get(fileName);
+            if (Files.exists(path)) {
+                return true;
+            }
+            if (Files.exists(path.getParent())){
+                if (level == 0){
+                    Files.createFile(path);
+                }else {
+                    Files.createDirectory(path);
+                }
+            }else {
+                checkDir(path.getParent().toString(), level + 1);
+                checkDir(fileName, level);
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

@@ -1,20 +1,20 @@
-package ${cfg.evt};
+package ${cfg.dto};
 
-import com.wsw.cloud.starter.data.group.*;
+import com.framework.cloud.common.group.Save;
+import com.framework.cloud.common.group.Update;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 /**
-* <p>
-* ${table.comment} 前端接收类
-* </p>
-* @author ${author}
-* @since ${date}
-*/
+ * ${table.comment!} 前端新增修改请求参数
+ *
+ * @author ${author}
+ */
 @Data
-public class ${entity}Evt {
+public class ${entity}DTO {
 
     @Null(message = "新增时主键为空", groups = Save.class)
     @NotNull(message = "修改时主键不能为空", groups = Update.class)

@@ -12,13 +12,10 @@ import lombok.*;
 </#if>
 
 /**
-* <p>
-* ${table.comment!}
-* </p>
-* @author ${author}
-* @since ${date}
-*/
-
+ * ${table.comment!} 实体
+ *
+ * @author ${author}
+ */
 <#if entityLombokModel>
 @Data
     <#if superEntityClass??>

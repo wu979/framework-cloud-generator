@@ -1,19 +1,12 @@
 package ${package.ServiceImpl};
 
 import cn.hutool.core.util.ObjectUtil;
-import com.wsw.cloud.starter.data.util.CopierUtil;
-import com.wsw.cloud.starter.data.service.impl.BaseServiceImpl;
-import com.wsw.cloud.starter.exception.page.PageVo;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import ${package.Entity}.${entity};
-import ${package.Mapper}.${table.mapperName};
-import ${package.Service}.${table.serviceName};
-import ${superServiceImplClassPackage};
+import com.framework.cloud.common.base.PageVO;
+import ${cfg.dto}.*;
 import ${cfg.vo}.*;
-import ${cfg.evt}.*;
-import com.wsw.cloud.starter.data.util.PageBuild;
-import com.wsw.cloud.starter.data.util.R;
-import com.wsw.cloud.starter.exception.result.Result;
+import ${package.Entity}.${entity};
+import ${package.Service}.${table.serviceName};
+import ${cfg.ry}.${entity}Repository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -21,50 +14,42 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
-* <p>
-* ${table.comment!} 服务实现类
-* </p>
-* @author ${author}
-* @since ${date}
-*/
+ * ${table.comment!} 服务实现类
+ *
+ * @author ${author}
+ */
 @Service
 @AllArgsConstructor
-<#if kotlin>
-open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
+public class ${table.serviceImplName} implements ${table.serviceName} {
 
-}
-<#else>
-public class ${table.serviceImplName} extends BaseServiceImpl<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+    private final ${entity}Repository ${entity?uncap_first}Repository;
 
     @Override
-    public PageVo<${entity}PageVo> page(${entity}PageEvt param) {
-        Page<${entity}PageVo> page = PageBuild.buildOrder(param);
-        return R.page(this.baseMapper.page(page, param));
+    public PageVO<${entity}PageVO> page(${entity}PageDTO param) {
+        return ${entity?uncap_first}Repository.page(param);
     }
 
     @Override
-    public ${entity}InfoVo info(Long id) {
-        ${entity} entity = this.getInfoById(id);
-        return CopierUtil.copyProperties(entity, ${entity}InfoVo.class);
+    public ${entity}InfoVO info(Long id) {
+        return ${entity?uncap_first}Repository.info(id);
     }
 
     @Override
-    public Result saveUpdate(${entity}Evt param) {
+    public boolean saveUpdate(${entity}DTO param) {
         ${entity} entity;
         if (ObjectUtil.isNull(param.getId())) {
             entity = new ${entity}();
             BeanUtils.copyProperties(param, entity);
         } else {
-            entity = this.getInfoById(param.getId());
+            entity = userRepository.getById(param.getId());
             BeanUtils.copyProperties(param, entity);
         }
-        return this.saveOrUpdate(entity) ? R.success() : R.error();
+        return userRepository.saveOrUpdate(entity);
     }
 
     @Override
-    public Result removes(List<Long> ids) {
-        return this.removeByIds(ids) ? R.success() : R.error();
+    public boolean removes(List<Long> ids) {
+        return userRepository.removeByIds(ids);
     }
 
 }
-</#if>

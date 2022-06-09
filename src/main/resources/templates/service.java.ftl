@@ -1,34 +1,48 @@
 package ${package.Service};
 
-import com.wsw.cloud.starter.data.service.IBaseService;
-import com.wsw.cloud.starter.exception.page.PageVo;
-import ${package.Entity}.${entity};
-import ${superServiceClassPackage};
+import com.framework.cloud.common.base.PageVO;
 import ${cfg.vo}.*;
-import ${cfg.evt}.*;
-import com.wsw.cloud.starter.exception.result.Result;
+import ${cfg.dto}.*;
+import ${package.Entity}.${entity};
 
 import java.util.List;
 
 /**
-* <p>
-* ${table.comment!} 服务类
-* </p>
-* @author ${author}
-* @since ${date}
-*/
-<#if kotlin>
-interface ${table.serviceName} : ${superServiceClass}<${entity}>
-<#else>
-public interface ${table.serviceName} extends IBaseService<${entity}> {
+ * ${table.comment!} 服务层接口
+ *
+ * @author ${author}
+ */
+public interface ${table.serviceName} {
+    /**
+     * ${table.comment!} 分页
+     *
+     * @param param 分页参数
+     * @return 数据
+     */
+    PageVO<${entity}PageVO> page(${entity}PageDTO param);
 
-    PageVo<${entity}PageVo> page(${entity}PageEvt param);
+    /**
+     * 详情
+     *
+     * @param id 主键
+     * @return 是否成功
+     */
+    ${entity}InfoVO info(Long id);
 
-    ${entity}InfoVo info(Long id);
+    /**
+     * 新增/修改
+     *
+     * @param param 新增修改参数
+     * @return 是否成功
+     */
+    boolean saveUpdate(${entity}DTO param);
 
-    Result saveUpdate(${entity}Evt param);
-
-    Result removes(List<Long> ids);
+    /**
+     * 删除
+     *
+     * @param ids 主键
+     * @return 是否成功
+     */
+    boolean removes(List<Long> ids);
 
 }
-</#if>

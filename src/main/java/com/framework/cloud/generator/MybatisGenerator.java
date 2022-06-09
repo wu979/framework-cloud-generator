@@ -12,9 +12,10 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.*;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.framework.cloud.generator.constant.GeneratorConstant;
+import com.framework.cloud.generator.constant.MysqlConstant;
+import com.framework.cloud.generator.constant.PathConstant;
 import com.framework.cloud.generator.utils.FileUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,15 +28,6 @@ import java.util.Map;
  */
 public class MybatisGenerator {
 
-    /**
-     * 省去前缀
-     */
-    private static final String TABLE_PREFIX = "w_";
-
-    /**
-     * 需要生成的表
-     */
-    private static final String[] TABLES = {"w_pay_order"};
 
     public static void main(String[] args) {
         // 全局配置
@@ -101,13 +93,13 @@ public class MybatisGenerator {
                 // 数据库类型
                 .setDbType(DbType.MYSQL)
                 // 连接驱动
-                .setDriverName(GeneratorConstant.DRIVER_NAME)
+                .setDriverName(MysqlConstant.DRIVER_NAME)
                 // 地址
-                .setUrl(GeneratorConstant.URL)
+                .setUrl(MysqlConstant.URL_PREFIX + MysqlConstant.URL + MysqlConstant.DATABASE + MysqlConstant.URL_SUFFIX)
                 // 用户名
-                .setUsername(GeneratorConstant.USERNAME)
+                .setUsername(MysqlConstant.USERNAME)
                 // 密码
-                .setPassword(GeneratorConstant.PASSWORD)
+                .setPassword(MysqlConstant.PASSWORD)
                 // 类型转换
                 .setTypeConvert(new MySqlTypeConvertCustom());
     }
@@ -118,19 +110,19 @@ public class MybatisGenerator {
     public static StrategyConfig strategyConfig() {
         return new StrategyConfig()
                 //需要生成的表
-                .setInclude(TABLES)
+                .setInclude(MysqlConstant.TABLES)
                 //表名生成策略：下划线连转驼峰
                 .setNaming(NamingStrategy.underline_to_camel)
                 //表字段生成策略：下划线连转驼峰
                 .setColumnNaming(NamingStrategy.underline_to_camel)
                 //去除表前缀
-                .setTablePrefix(TABLE_PREFIX)
+                .setTablePrefix(MysqlConstant.TABLE_PREFIX)
                 //生成controller
                 .setRestControllerStyle(true)
                 //controller映射地址：驼峰转连字符
                 .setControllerMappingHyphenStyle(false)
                 //自定义实体父类
-                .setSuperEntityClass("com.framework.cloud.mybatis.base.BaseEntity")
+                .setSuperEntityClass(GeneratorConstant.SUPER_ENTITY_PACKAGE)
                 //序列化
                 .setEntitySerialVersionUID(true)
                 //是否为lombok模型; 需要lombok依赖
@@ -146,11 +138,11 @@ public class MybatisGenerator {
     public static PackageConfig packageConfig() {
         return new PackageConfig()
                 .setParent("")
-                .setEntity(GeneratorConstant.PACKAGE_ENTITY_PATH + ".entity")
-                .setMapper(GeneratorConstant.PACKAGE_PROJECT_PATH + ".domain.mapper")
-                .setService(GeneratorConstant.PACKAGE_PROJECT_PATH + ".domain.service")
-                .setServiceImpl(GeneratorConstant.PACKAGE_PROJECT_PATH + ".domain.service.impl")
-                .setController(GeneratorConstant.PACKAGE_PROJECT_PATH + ".controller");
+                .setEntity(PathConstant.ENTITY_PACKAGE)
+                .setMapper(PathConstant.MAPPER_PACKAGE)
+                .setService(PathConstant.SERVICE_PACKAGE)
+                .setServiceImpl(PathConstant.SERVICE_IMPL_PACKAGE)
+                .setController(PathConstant.CONTROLLER_PACKAGE);
     }
 
     /**
@@ -178,8 +170,11 @@ public class MybatisGenerator {
             @Override
             public void initMap() {
                 Map<String, Object> map = new HashMap<>();
-                map.put("vo", GeneratorConstant.PACKAGE_ENTITY_PATH + ".vo");
-                map.put("dto", GeneratorConstant.PACKAGE_ENTITY_PATH + ".dto");
+                map.put("vo", PathConstant.VO_PACKAGE);
+                map.put("dto", PathConstant.DTO_PACKAGE);
+                map.put("ry", PathConstant.REPOSITORY_PACKAGE);
+                map.put("ryl", PathConstant.REPOSITORY_IMPL_PACKAGE);
+                map.put("converter", PathConstant.CONVERTER_PACKAGE);
                 this.setMap(map);
             }
         }
@@ -188,9 +183,7 @@ public class MybatisGenerator {
             @Override
             public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
                 // 检查文件目录，不存在自动递归创建
-                checkDir(filePath);
-                FileUtil.isExists(filePath);
-                return true;
+                return FileUtil.checkDir(filePath, 0);
             }
         })
         // 自定义输出文件
@@ -201,101 +194,96 @@ public class MybatisGenerator {
      * 自定义输出文件配置
      */
     private static List<FileOutConfig> fileOutConfigList() {
-        //模块路径
-        String modulePath = GeneratorConstant.OVERALL_PATH + GeneratorConstant.MODULE_PATH;
-        String projectPath = modulePath + GeneratorConstant.PROJECT_PATH;
-        String entityPath = modulePath + GeneratorConstant.INFRASTRUCTURE_PATH + GeneratorConstant.SRC_PATH;
-        String srcPath = projectPath + GeneratorConstant.SRC_PATH;
-        String xmlPath = projectPath + GeneratorConstant.XML_PATH + "mapper/";
-
-        String packageEntityPath = GeneratorConstant.PACKAGE_ENTITY_PATH;
-        String packageProjectPath = GeneratorConstant.PACKAGE_PROJECT_PATH;
-
-        String dto = FileUtil.replacePath(entityPath, packageEntityPath + ".dto");
-        String vo = FileUtil.replacePath(entityPath, packageEntityPath + ".vo");
-        String entity = FileUtil.replacePath(entityPath, packageEntityPath + ".entity");
-        String xml = FileUtil.replacePath(xmlPath, "");
-        String mapper = FileUtil.replacePath(srcPath, packageProjectPath + ".domain.mapper");
-        String service = FileUtil.replacePath(srcPath, packageProjectPath + ".domain.service");
-        String impl = FileUtil.replacePath(srcPath, packageProjectPath + ".domain.service.impl");
-        String controller = FileUtil.replacePath(srcPath, packageProjectPath + ".controller");
-
         List<FileOutConfig> list = new ArrayList<>();
-        // 实体类文件输出
-        list.add(new FileOutConfig("templates/entity.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return entity + StringPool.SLASH + tableInfo.getEntityName() + StringPool.DOT_JAVA;
-            }
-        });
-        // mapper xml文件输出
-        list.add(new FileOutConfig("templates/xml.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return xml + StringPool.SLASH + tableInfo.getXmlName() + StringPool.DOT_XML;
-            }
-        });
-        // mapper文件输出
-        list.add(new FileOutConfig("templates/mapper.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return mapper + StringPool.SLASH + tableInfo.getMapperName() + StringPool.DOT_JAVA;
-            }
-        });
-        // service文件输出
-        list.add(new FileOutConfig("templates/service.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return service + StringPool.SLASH + tableInfo.getServiceName() + StringPool.DOT_JAVA;
-            }
-        });
-        // service impl文件输出
-        list.add(new FileOutConfig("templates/serviceImpl.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return impl + StringPool.SLASH + tableInfo.getServiceImplName() + StringPool.DOT_JAVA;
-            }
-        });
-        // controller文件输出
-        list.add(new FileOutConfig("templates/controller.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return controller + StringPool.SLASH + tableInfo.getControllerName() + StringPool.DOT_JAVA;
-            }
-        });
         // dto文件输出
         list.add(new FileOutConfig("templates/saveDTO.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return dto + StringPool.SLASH + tableInfo.getEntityName() + "DTO" + StringPool.DOT_JAVA;
-            }
-        });
-        // dto文件输出
-        list.add(new FileOutConfig("templates/updateDTO.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return dto + StringPool.SLASH + tableInfo.getEntityName() + "DTO" + StringPool.DOT_JAVA;
+                return PathConstant.DTO_PATH + StringPool.SLASH + tableInfo.getEntityName() + "DTO" + StringPool.DOT_JAVA;
             }
         });
         // dto文件输出
         list.add(new FileOutConfig("templates/pageDTO.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return dto + StringPool.SLASH + tableInfo.getEntityName() + "PageDTO" + StringPool.DOT_JAVA;
+                return PathConstant.DTO_PATH + StringPool.SLASH + tableInfo.getEntityName() + "PageDTO" + StringPool.DOT_JAVA;
             }
         });
-        // info文件输出
+        // vo文件输出
         list.add(new FileOutConfig("templates/infoVO.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return vo + StringPool.SLASH + tableInfo.getEntityName() + "InfoVO" + StringPool.DOT_JAVA;
+                return PathConstant.VO_PATH + StringPool.SLASH + tableInfo.getEntityName() + "InfoVO" + StringPool.DOT_JAVA;
             }
         });
-        // info文件输出
+        // vo文件输出
         list.add(new FileOutConfig("templates/pageVO.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return vo + StringPool.SLASH + tableInfo.getEntityName() + "PageVo" + StringPool.DOT_JAVA;
+                return PathConstant.VO_PATH + StringPool.SLASH + tableInfo.getEntityName() + "PageVO" + StringPool.DOT_JAVA;
+            }
+        });
+        // 转换器文件输出
+        list.add(new FileOutConfig("templates/converter.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.CONVERTER_PATH + StringPool.SLASH + tableInfo.getEntityName() + "Converter" + StringPool.DOT_JAVA;
+            }
+        });
+        // 实体类文件输出
+        list.add(new FileOutConfig("templates/entity.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.ENTITY_PATH + StringPool.SLASH + tableInfo.getEntityName() + StringPool.DOT_JAVA;
+            }
+        });
+        // mapper xml文件输出
+        list.add(new FileOutConfig("templates/xml.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.XML_PATH + StringPool.SLASH + tableInfo.getXmlName() + StringPool.DOT_XML;
+            }
+        });
+        // mapper文件输出
+        list.add(new FileOutConfig("templates/mapper.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.MAPPER_PATH + StringPool.SLASH + tableInfo.getMapperName() + StringPool.DOT_JAVA;
+            }
+        });
+        // repository文件输出
+        list.add(new FileOutConfig("templates/repository.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.REPOSITORY_PATH + StringPool.SLASH + tableInfo.getEntityName() + "Repository" + StringPool.DOT_JAVA;
+            }
+        });
+        // repository impl文件输出
+        list.add(new FileOutConfig("templates/repositoryImpl.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.REPOSITORY_IMPL_PATH + StringPool.SLASH + tableInfo.getEntityName() + "RepositoryImpl" + StringPool.DOT_JAVA;
+            }
+        });
+        // service文件输出
+        list.add(new FileOutConfig("templates/service.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.SERVICE_PATH + StringPool.SLASH + tableInfo.getServiceName() + StringPool.DOT_JAVA;
+            }
+        });
+        // service impl文件输出
+        list.add(new FileOutConfig("templates/serviceImpl.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.SERVICE_IMPL_PATH + StringPool.SLASH + tableInfo.getServiceImplName() + StringPool.DOT_JAVA;
+            }
+        });
+        // controller文件输出
+        list.add(new FileOutConfig("templates/controller.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return PathConstant.CONTROLLER_PATH + StringPool.SLASH + tableInfo.getControllerName() + StringPool.DOT_JAVA;
             }
         });
         return list;
@@ -304,7 +292,7 @@ public class MybatisGenerator {
     static class MySqlTypeConvertCustom extends MySqlTypeConvert implements ITypeConvert {
         @Override
         public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
-            if (fieldType.toLowerCase().contains(GeneratorConstant.CONVERT_TINYINT)) {
+            if (fieldType.toLowerCase().contains(MysqlConstant.CONVERT_TINYINT)) {
                 return DbColumnType.INTEGER;
             }
             return super.processTypeConvert(globalConfig, fieldType);

@@ -32,7 +32,7 @@
     </sql>
 </#if>
 
-    <select id="page" resultType="${cfg.vo}.${entity}PageVo">
+    <select id="page" resultType="${cfg.vo}.${entity}PageVO">
         select
             <include refid="Base_Column_List"/>
         from ${table.name}

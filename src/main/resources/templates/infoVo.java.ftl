@@ -1,16 +1,16 @@
 package ${cfg.vo};
 
-import com.wsw.cloud.starter.data.base.BaseVo;
+import com.framework.cloud.common.base.BaseVO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
-* <p>
-* ${table.comment} 前端返回类
-* </p>
-* @author ${author}
-* @since ${date}
-*/
+ * ${table.comment!} 详情返回体
+ *
+ * @author ${author}
+ */
 @Data
-public class ${entity}InfoVo extends BaseVo {
+@EqualsAndHashCode(callSuper = true)
+public class ${entity}InfoVO extends BaseVO {
 
 }

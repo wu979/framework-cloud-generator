@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 /**
- * ${table.comment!} 前端新增修改请求参数
+ * ${table.comment!} 新增修改DTO
  *
  * @author ${author}
  */

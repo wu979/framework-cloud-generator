@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * ${table.comment!} 分页返回包装体
+ * ${table.comment!} 分页VO
  *
  * @author ${author}
  */

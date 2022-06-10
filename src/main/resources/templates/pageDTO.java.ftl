@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * ${table.comment!} 前端分页请求参数
+ * ${table.comment!} 分页DTO
  *
  * @author ${author}
  */

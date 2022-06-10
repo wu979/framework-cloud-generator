@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ${entity}RepositoryImpl extends BaseRepositoryImpl<${table.mapperName}, ${entity}> implements ${entity}Repository {
 
-    private final UserConverter userConverter;
+    private final ${entity}Converter ${entity?uncap_first}Converter;
 
     @Override
     public PageVO<${entity}PageVO> page(${entity}PageDTO param) {
@@ -37,6 +37,6 @@ public class ${entity}RepositoryImpl extends BaseRepositoryImpl<${table.mapperNa
     @Override
     public ${entity}InfoVO info(Long id) {
         ${entity} entity = this.getById(id);
-        return userConverter.info(entity);
+        return ${entity?uncap_first}Converter.info(entity);
     }
 }

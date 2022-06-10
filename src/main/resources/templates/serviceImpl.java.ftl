@@ -41,15 +41,15 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
             entity = new ${entity}();
             BeanUtils.copyProperties(param, entity);
         } else {
-            entity = userRepository.getById(param.getId());
+            entity = ${entity?uncap_first}Repository.getById(param.getId());
             BeanUtils.copyProperties(param, entity);
         }
-        return userRepository.saveOrUpdate(entity);
+        return ${entity?uncap_first}Repository.saveOrUpdate(entity);
     }
 
     @Override
     public boolean removes(List<Long> ids) {
-        return userRepository.removeByIds(ids);
+        return ${entity?uncap_first}Repository.removeByIds(ids);
     }
 
 }

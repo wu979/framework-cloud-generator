@@ -2,6 +2,7 @@ package ${package.ServiceImpl};
 
 import cn.hutool.core.util.ObjectUtil;
 import com.framework.cloud.common.base.PageVO;
+import com.framework.cloud.common.utils.CopierUtil;
 import ${cfg.dto}.*;
 import ${cfg.vo}.*;
 import ${package.Entity}.${entity};
@@ -39,10 +40,10 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         ${entity} entity;
         if (ObjectUtil.isNull(param.getId())) {
             entity = new ${entity}();
-            BeanUtils.copyProperties(param, entity);
+            CopierUtil.copyProperties(param, entity);
         } else {
             entity = ${entity?uncap_first}Repository.getById(param.getId());
-            BeanUtils.copyProperties(param, entity);
+            CopierUtil.copyProperties(param, entity);
         }
         return ${entity?uncap_first}Repository.saveOrUpdate(entity);
     }

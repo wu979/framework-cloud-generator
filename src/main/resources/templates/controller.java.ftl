@@ -12,7 +12,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 <#if restControllerStyle>
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
     import ${superControllerClassPackage};
 </#if>
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
     </#if>
 
-    @Autowired
+    @Resource
     private ${table.serviceName} ${table.serviceName?uncap_first};
 
     @ApiOperation(value = "${table.comment}列表")

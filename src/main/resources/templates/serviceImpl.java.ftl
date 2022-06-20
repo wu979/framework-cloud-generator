@@ -37,15 +37,15 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public boolean saveUpdate(${entity}DTO param) {
-        ${entity} entity;
+        ${entity} ${entity?uncap_first};
         if (ObjectUtil.isNull(param.getId())) {
-            entity = new ${entity}();
-            CopierUtil.copyProperties(param, entity);
+            ${entity?uncap_first} = new ${entity}();
+            CopierUtil.copyProperties(param, ${entity?uncap_first});
         } else {
-            entity = ${entity?uncap_first}Repository.getById(param.getId());
-            CopierUtil.copyProperties(param, entity);
+            ${entity?uncap_first} = ${entity?uncap_first}Repository.getById(param.getId());
+            CopierUtil.copyProperties(param, ${entity?uncap_first});
         }
-        return ${entity?uncap_first}Repository.saveOrUpdate(entity);
+        return ${entity?uncap_first}Repository.saveOrUpdate(${entity?uncap_first});
     }
 
     @Override

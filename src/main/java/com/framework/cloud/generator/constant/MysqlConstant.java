@@ -12,7 +12,7 @@ public class MysqlConstant {
     /** 数据库-地址 */
     public static final String URL = "139.155.11.84:3306/";
     /** 数据库-库名 */
-    public static final String DATABASE = "framework-user";
+    public static final String DATABASE = "framework-platform";
     /** 数据库-后缀 */
     public static final String URL_SUFFIX = "?characterEncoding=utf8&useSSL=false&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=GMT%2B8";
     /** 数据库-账号 */
@@ -26,5 +26,5 @@ public class MysqlConstant {
     /** 表名前缀 */
     public static final String TABLE_PREFIX = "t_";
     /** 需要生成的表 */
-    public static final String[] TABLES = { "t_permission", "t_user", "t_role", "t_role_permission", "t_user_auth", "t_user_role" };
+    public static final String[] TABLES = { "t_oauth_code" };
 }

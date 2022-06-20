@@ -25,7 +25,7 @@ public interface ${table.serviceName} {
      * 详情
      *
      * @param id 主键
-     * @return 是否成功
+     * @return 详情
      */
     ${entity}InfoVO info(Long id);
 
@@ -33,7 +33,7 @@ public interface ${table.serviceName} {
      * 新增/修改
      *
      * @param param 新增修改参数
-     * @return 是否成功
+     * @return 详情
      */
     boolean saveUpdate(${entity}DTO param);
 

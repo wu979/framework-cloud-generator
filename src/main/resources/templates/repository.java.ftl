@@ -25,7 +25,7 @@ public interface ${entity}Repository extends BaseRepository<${entity}> {
      * 详情
      *
      * @param id 主键
-     * @return 是否成功
+     * @return 详情
      */
     ${entity}InfoVO info(Long id);
 

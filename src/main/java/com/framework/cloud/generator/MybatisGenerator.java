@@ -120,7 +120,7 @@ public class MybatisGenerator {
                 //生成controller
                 .setRestControllerStyle(true)
                 //controller映射地址：驼峰转连字符
-                .setControllerMappingHyphenStyle(false)
+                .setControllerMappingHyphenStyle(true)
                 //自定义实体父类
                 .setSuperEntityClass(GeneratorConstant.SUPER_ENTITY_PACKAGE)
                 //序列化

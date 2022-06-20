@@ -36,7 +36,7 @@ public class ${entity}RepositoryImpl extends BaseRepositoryImpl<${table.mapperNa
 
     @Override
     public ${entity}InfoVO info(Long id) {
-        ${entity} entity = this.getById(id);
-        return ${entity?uncap_first}Converter.info(entity);
+        ${entity} ${entity?uncap_first} = this.getById(id);
+        return ${entity?uncap_first}Converter.info(${entity?uncap_first});
     }
 }

@@ -26,5 +26,5 @@ public class MysqlConstant {
     /** 表名前缀 */
     public static final String TABLE_PREFIX = "t_";
     /** 需要生成的表 */
-    public static final String[] TABLES = { "t_oauth_code" };
+    public static final String[] TABLES = { "t_setting" };
 }

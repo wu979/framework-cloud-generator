@@ -42,7 +42,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
             ${entity?uncap_first} = new ${entity}();
             CopierUtil.copyProperties(param, ${entity?uncap_first});
         } else {
-            ${entity?uncap_first} = ${entity?uncap_first}Repository.getById(param.getId());
+            ${entity?uncap_first} = ${entity?uncap_first}Repository.getByIdNotNull(param.getId());
             CopierUtil.copyProperties(param, ${entity?uncap_first});
         }
         return ${entity?uncap_first}Repository.saveOrUpdate(${entity?uncap_first});

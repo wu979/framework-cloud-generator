@@ -31,7 +31,7 @@ public class PathConstant {
     /** service */
     public static final String SERVICE_PACKAGE = DOMAIN_PACKAGE + ".service";
     /** serviceImpl */
-    public static final String SERVICE_IMPL_PACKAGE = SERVICE_PACKAGE + ".impl";
+    public static final String SERVICE_IMPL_PACKAGE = INFRASTRUCTURE_PACKAGE + ".service";
     /** repositoryImpl */
     public static final String REPOSITORY_IMPL_PACKAGE = INFRASTRUCTURE_PACKAGE + ".repository";
     /** mapper */
@@ -70,7 +70,7 @@ public class PathConstant {
     /** service */
     public static final String SERVICE_PATH = DOMAIN_PATH + "/service";
     /** serviceImpl */
-    public static final String SERVICE_IMPL_PATH = SERVICE_PATH + "/impl";
+    public static final String SERVICE_IMPL_PATH = INFRASTRUCTURE_PATH + "/service";
     /** repositoryImpl */
     public static final String REPOSITORY_IMPL_PATH = INFRASTRUCTURE_PATH + "/repository";
     /** mapper */

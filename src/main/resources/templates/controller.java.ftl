@@ -66,13 +66,13 @@ public class ${table.controllerName} {
     @ApiOperation(value = "${table.comment}新增")
     @PostMapping(value = "/save")
     public Result<Boolean> save(@ApiParam("${table.comment}") @Valid @Validated(Save.class) @RequestBody ${entity}DTO param) {
-        return R.success(${table.serviceName?uncap_first}.saveUpdate(param));
+        return R.success(${table.serviceName?uncap_first}.save(param));
     }
 
     @ApiOperation(value = "${table.comment}修改")
     @PostMapping(value = "/update")
     public Result<Boolean> update(@ApiParam("${table.comment}") @Valid @Validated(Update.class) @RequestBody ${entity}DTO param) {
-        return R.success(${table.serviceName?uncap_first}.saveUpdate(param));
+        return R.success(${table.serviceName?uncap_first}.update(param));
     }
 
     @ApiOperation(value = "${table.comment}删除")

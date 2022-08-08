@@ -30,18 +30,26 @@ public interface ${table.serviceName} {
     ${entity}InfoVO info(Long id);
 
     /**
-     * 新增/修改
+     * 新增
      *
-     * @param param 新增修改参数
-     * @return 详情
+     * @param param 新增参数
+     * @return bool
      */
-    boolean saveUpdate(${entity}DTO param);
+    boolean save(${entity}DTO param);
+
+    /**
+    * 修改
+    *
+    * @param param 修改参数
+    * @return bool
+    */
+    boolean update(${entity}DTO param);
 
     /**
      * 删除
      *
      * @param ids 主键
-     * @return 是否成功
+     * @return bool
      */
     boolean removes(List<Long> ids);
 

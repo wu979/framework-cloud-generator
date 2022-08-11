@@ -8,13 +8,16 @@ import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.*;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
 import com.framework.cloud.generator.constant.GeneratorConstant;
 import com.framework.cloud.generator.constant.MysqlConstant;
 import com.framework.cloud.generator.constant.PathConstant;
 import com.framework.cloud.generator.utils.FileUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,7 +104,10 @@ public class MybatisGenerator {
                 // 密码
                 .setPassword(MysqlConstant.PASSWORD)
                 // 类型转换
-                .setTypeConvert(new MySqlTypeConvertCustom());
+                .setTypeConvert(new MySqlTypeConvertCustom())
+                //关键字处理
+                .setKeyWordsHandler(new MySqlKeyWordsHandler())
+                ;
     }
 
     /**
@@ -237,13 +243,6 @@ public class MybatisGenerator {
                 return PathConstant.ENTITY_PATH + StringPool.SLASH + tableInfo.getEntityName() + StringPool.DOT_JAVA;
             }
         });
-        // mapper xml文件输出
-        list.add(new FileOutConfig("templates/xml.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return PathConstant.XML_PATH + StringPool.SLASH + tableInfo.getXmlName() + StringPool.DOT_XML;
-            }
-        });
         // mapper文件输出
         list.add(new FileOutConfig("templates/mapper.java.ftl") {
             @Override
@@ -286,16 +285,53 @@ public class MybatisGenerator {
                 return PathConstant.CONTROLLER_PATH + StringPool.SLASH + tableInfo.getControllerName() + StringPool.DOT_JAVA;
             }
         });
+        // mapper xml文件输出 因为自定义 重新赋值了Comment字段 会影响备注
+        list.add(new FileOutConfig("templates/xml.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                //xml自定义 表名取首字母 <sql> 标签 + 首字母
+                String tableName = tableInfo.getName();
+                String removePrefix = StringUtils.substringAfter(tableName, MysqlConstant.TABLE_PREFIX);
+                String[] tableNameSplit = removePrefix.split(StringPool.UNDERSCORE);
+                StringBuilder tableNameBuilder = new StringBuilder();
+                for (String str : tableNameSplit) {
+                    tableNameBuilder.append(StringUtils.substring(str, 0, 1));
+                }
+                String abbreviation = tableNameBuilder.toString();
+                String fieldNames = tableInfo.getFieldNames();
+                String[] fieldNamesSplit = fieldNames.split(StringPool.COMMA);
+                StringBuilder fieldNamesBuilder = new StringBuilder();
+                for (String str : fieldNamesSplit) {
+                    str = str.trim();
+                    if (StringUtils.startsWith(str, abbreviation)) {
+                        fieldNamesBuilder.append(str).append(StringPool.COMMA).append(StringPool.SPACE);
+                    } else {
+                        fieldNamesBuilder.append(abbreviation).append(StringPool.DOT).append(str).append(StringPool.COMMA).append(StringPool.SPACE);
+                    }
+                }
+                fieldNamesBuilder.deleteCharAt(fieldNamesBuilder.length() - 2);
+                tableInfo.setFieldNames(fieldNamesBuilder.toString());
+                tableInfo.setComment(abbreviation);
+                return PathConstant.XML_PATH + StringPool.SLASH + tableInfo.getXmlName() + StringPool.DOT_XML;
+            }
+        });
         return list;
     }
 
     static class MySqlTypeConvertCustom extends MySqlTypeConvert implements ITypeConvert {
         @Override
-        public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
-            if (fieldType.toLowerCase().contains(MysqlConstant.CONVERT_TINYINT)) {
+        public IColumnType processTypeConvert(GlobalConfig globalConfig, TableField tableField) {
+            String type = tableField.getType().toLowerCase();
+            if (type.contains(MysqlConstant.CONVERT_TINYINT)) {
                 return DbColumnType.INTEGER;
             }
-            return super.processTypeConvert(globalConfig, fieldType);
+            if (type.contains(MysqlConstant.CONVERT_BIGINT)) {
+                String columnName = tableField.getColumnName();
+                if (StringUtils.endsWithAny(columnName, MysqlConstant.AMOUNT, MysqlConstant.PRICE)) {
+                    return DbColumnType.BIG_DECIMAL;
+                }
+            }
+            return super.processTypeConvert(globalConfig, tableField);
         }
     }
 }

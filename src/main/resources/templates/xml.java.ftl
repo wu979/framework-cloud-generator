@@ -28,13 +28,14 @@
 <#if baseColumnList>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        ${table.fieldNames}<#list table.commonFields as field>, ${field.name}</#list>
+        ${table.fieldNames}<#list table.commonFields as commonField>, ${table.comment}.${commonField.columnName}</#list>
     </sql>
 </#if>
 
     <select id="page" resultType="${cfg.vo}.${entity}PageVO">
         select
             <include refid="Base_Column_List"/>
-        from ${table.name}
+        from ${table.name} ${table.comment}
+        where ${table.comment}.deleted = 1
     </select>
 </mapper>

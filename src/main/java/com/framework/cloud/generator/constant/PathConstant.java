@@ -10,7 +10,7 @@ public class PathConstant {
     /** 项目生成文件夹 */
     public static final String PATH = "C:/Program Files/979/framework";
     /** 模块名称 */
-    public static final String MODULE = "platform";
+    public static final String MODULE = "pay";
 
     // 以下配置无特殊需求 禁止修改
     // 定义 包名

@@ -23,10 +23,11 @@ public class MysqlConstant {
     public static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
     /** 类型转换-tinyint to int */
     public static final String CONVERT_TINYINT = "tinyint";
-    /** 类型转换-bigint to BigDecimal PS: 需字段以 （ _amount、_price ） 结尾*/
+    /** 类型转换-bigint to BigDecimal PS: 需字段以 （ _amount、_price、_money ） 结尾*/
     public static final String CONVERT_BIGINT = "bigint";
     public static final String AMOUNT = "_amount";
     public static final String PRICE = "_price";
+    public static final String MONEY = "_money";
     /** 表名前缀 */
     public static final String TABLE_PREFIX = "t_";
     /** 需要生成的表 */

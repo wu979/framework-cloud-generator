@@ -6,6 +6,7 @@ import ${pkg};
 <#if swagger2>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.framework.cloud.mybatis.annotation.LongToBigDecimal;
 </#if>
 <#if entityLombokModel>
 import lombok.*;
@@ -54,13 +55,6 @@ public class ${entity} implements Serializable {
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
 
-    <#if field.comment!?length gt 0>
-        <#if swagger2>
-    @ApiModelProperty(value = "${field.comment}")
-        <#else>
-    @ApiModelProperty(value = "")
-        </#if>
-    </#if>
     <#if field.keyFlag>
     <#-- 主键 -->
         <#if field.keyIdentityFlag>
@@ -88,6 +82,16 @@ public class ${entity} implements Serializable {
 <#-- 逻辑删除注解 -->
     <#if (logicDeleteFieldName!"") == field.name>
     @TableLogic
+    </#if>
+    <#if field.type?index_of('bigint') != -1 && field.propertyType == 'BigDecimal'>
+    @LongToBigDecimal
+    </#if>
+    <#if field.comment!?length gt 0>
+        <#if swagger2>
+    @ApiModelProperty(value = "${field.comment}")
+        <#else>
+    @ApiModelProperty(value = "")
+        </#if>
     </#if>
     private ${field.propertyType} ${field.propertyName};
 </#list>

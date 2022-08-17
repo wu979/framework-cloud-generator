@@ -327,7 +327,7 @@ public class MybatisGenerator {
             }
             if (type.contains(MysqlConstant.CONVERT_BIGINT)) {
                 String columnName = tableField.getColumnName();
-                if (StringUtils.endsWithAny(columnName, MysqlConstant.AMOUNT, MysqlConstant.PRICE)) {
+                if (StringUtils.endsWithAny(columnName, MysqlConstant.AMOUNT, MysqlConstant.PRICE, MysqlConstant.MONEY)) {
                     return DbColumnType.BIG_DECIMAL;
                 }
             }

@@ -83,9 +83,12 @@ public class ${entity} implements Serializable {
     <#if (logicDeleteFieldName!"") == field.name>
     @TableLogic
     </#if>
+<#--
+    生成Long转BigDecimal注解 但是由于BaseTypeHandler要么扫描要么注入 默认全局 TableField 手动指定无效
     <#if field.type?index_of('bigint') != -1 && field.propertyType == 'BigDecimal'>
     @LongToBigDecimal
     </#if>
+ -->
     <#if field.comment!?length gt 0>
         <#if swagger2>
     @ApiModelProperty(value = "${field.comment}")

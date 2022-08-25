@@ -31,5 +31,5 @@ public class MysqlConstant {
     /** 表名前缀 */
     public static final String TABLE_PREFIX = "t_";
     /** 需要生成的表 */
-    public static final String[] TABLES = { "t_pay_order" };
+    public static final String[] TABLES = { "t_pay_order", "t_pay_notify" };
 }
